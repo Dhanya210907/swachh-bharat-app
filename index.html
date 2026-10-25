@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#14532d" />
+    <title>Swachh Bharat Complaint System</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        color: #183326;
+        background: #f4f7f3;
+        --green: #14532d;
+        --green-dark: #0d3b20;
+        --green-light: #e8f2e9;
+        --gold: #d9ac23;
+        --gold-bright: #ebbf00;
+        --saffron: #f28c28;
+        --muted: #66756b;
+        --line: #dce5dc;
+        --white: #fff;
+        --shadow: 0 16px 38px rgb(22 48 31 / 9%);
+      }
+
+      * { box-sizing: border-box; }
+      body { margin: 0; min-width: 320px; min-height: 100vh; background: #f4f7f3; }
+      button, input, select, textarea { font: inherit; }
+      button { cursor: pointer; }
+      button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px solid #16804a; outline-offset: 2px; }
+      .page { width: min(100% - 28px, 1120px); margin: 0 auto; }
+      .topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 0; }
+      .brand { display: inline-flex; align-items: center; gap: 11px; color: inherit; text-decoration: none; }
+      .brand-mark { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 14px; background: var(--green); color: white; font-weight: 800; letter-spacing: -0.06em; box-shadow: 0 7px 16px rgb(20 83 45 / 20%); }
+      .brand-name { display: block; font-size: 0.98rem; font-weight: 800; letter-spacing: -0.025em; }
+      .brand-sub { display: block; margin-top: 2px; color: var(--muted); font-size: 0.74rem; }
+      .top-actions { display: flex; align-items: center; gap: 9px; }
+      .button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; border: 0; border-radius: 13px; padding: 0 17px; color: white; background: var(--green); font-weight: 750; text-decoration: none; transition: transform 150ms ease, box-shadow 150ms ease, background 150ms ease; }
+      .button:hover { transform: translateY(-1px); box-shadow: 0 8px 18px rgb(20 83 45 / 18%); background: #0e4525; }
+      .button.secondary { background: white; color: var(--green); border: 1px solid var(--line); }
+      .button.secondary:hover { background: var(--green-light); box-shadow: none; }
+      .button.gold { color: #332907; background: var(--gold-bright); }
+      .button.gold:hover { background: #e1b600; }
+      .button.ghost { min-height: 38px; padding: 0 12px; color: var(--green); background: transparent; }
+      .button.small { min-height: 38px; padding: 0 13px; font-size: 0.86rem; }
+      .button.full { width: 100%; }
+      .eyebrow { display: inline-flex; align-items: center; gap: 8px; color: var(--green); font-size: 0.77rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; }
+      .eyebrow::before { display: block; width: 20px; height: 2px; background: var(--saffron); content: ""; }
+      .muted { color: var(--muted); }
+      .welcome { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(280px, 0.95fr); gap: clamp(24px, 5vw, 66px); align-items: center; min-height: 550px; padding: 36px 0 46px; }
+      .welcome h1 { max-width: 650px; margin: 16px 0; color: var(--green-dark); font-size: clamp(2.6rem, 6vw, 4.75rem); line-height: 0.99; letter-spacing: -0.065em; }
+      .welcome h1 span { color: #c28f0c; }
+      .lead { max-width: 540px; color: #57685d; font-size: clamp(1rem, 2vw, 1.17rem); line-height: 1.7; }
+      .welcome-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 25px; }
+      .trustline { display: flex; align-items: center; gap: 8px; margin-top: 23px; color: #718075; font-size: 0.82rem; }
+      .trust-icon { display: grid; place-items: center; width: 20px; height: 20px; border-radius: 99px; background: #e8f4e9; color: #287c45; font-weight: 900; }
+      .hero-panel { position: relative; overflow: hidden; min-height: 370px; border-radius: 30px; padding: clamp(22px, 4vw, 34px); color: white; background: linear-gradient(145deg, #0d3b20 4%, #14532d 56%, #247243 100%); box-shadow: 0 22px 54px rgb(14 61 33 / 25%); }
+      .hero-panel::before, .hero-panel::after { position: absolute; border: 1px solid rgb(255 255 255 / 12%); border-radius: 50%; content: ""; pointer-events: none; }
+      .hero-panel::before { width: 330px; height: 330px; right: -105px; top: -120px; }
+      .hero-panel::after { width: 240px; height: 240px; right: -58px; top: -75px; }
+      .panel-top { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+      .initiative { display: flex; align-items: center; gap: 9px; color: rgb(255 255 255 / 82%); font-size: 0.8rem; font-weight: 650; }
+      .initiative-mark { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 9px; color: #3b3107; background: var(--gold-bright); font-weight: 900; }
+      .live-pill { border: 1px solid rgb(255 255 255 / 24%); border-radius: 99px; padding: 6px 10px; color: #e4f4e7; background: rgb(255 255 255 / 8%); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em; }
+      .hero-panel h2 { position: relative; max-width: 380px; margin: 46px 0 10px; font-size: clamp(1.65rem, 4vw, 2.3rem); line-height: 1.08; letter-spacing: -0.04em; }
+      .hero-panel p { position: relative; max-width: 360px; margin: 0; color: rgb(255 255 255 / 70%); line-height: 1.55; }
+      .panel-stats { position: relative; display: flex; gap: 12px; margin-top: 32px; }
+      .panel-stat { flex: 1; border: 1px solid rgb(255 255 255 / 14%); border-radius: 16px; padding: 14px; background: rgb(255 255 255 / 8%); }
+      .panel-stat strong { display: block; font-size: 1.45rem; }
+      .panel-stat span { display: block; margin-top: 3px; color: rgb(255 255 255 / 66%); font-size: 0.72rem; }
+      .section-heading { display: flex; align-items: end; justify-content: space-between; gap: 18px; margin: 24px 0 14px; }
+      .section-heading h2 { margin: 0; color: var(--green-dark); font-size: clamp(1.3rem, 3vw, 1.8rem); letter-spacing: -0.04em; }
+      .section-heading p { margin: 6px 0 0; color: var(--muted); font-size: 0.9rem; }
+      .feature-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; padding-bottom: 44px; }
+      .feature { display: flex; align-items: start; gap: 13px; border: 1px solid var(--line); border-radius: 18px; padding: 18px; background: white; }
+      .feature-icon { display: grid; place-items: center; flex: 0 0 38px; width: 38px; height: 38px; border-radius: 12px; color: var(--green); background: #e9f3ea; font-size: 1.05rem; font-weight: 900; }
+      .feature h3 { margin: 2px 0 5px; font-size: 0.96rem; }
+      .feature p { margin: 0; color: var(--muted); font-size: 0.82rem; line-height: 1.5; }
+      .auth-wrap { display: grid; place-items: center; min-height: 65vh; padding: 28px 0 55px; }
+      .auth-card { width: min(100%, 500px); border: 1px solid var(--line); border-radius: 24px; padding: clamp(22px, 5vw, 36px); background: white; box-shadow: var(--shadow); }
+      .auth-card h1 { margin: 7px 0; color: var(--green-dark); font-size: 2rem; letter-spacing: -0.05em; }
+      .auth-card > p { margin: 0 0 22px; color: var(--muted); line-height: 1.5; }
+      .notice { display: flex; gap: 10px; align-items: start; border: 1px solid #f0df9b; border-radius: 13px; margin: 0 0 18px; padding: 12px; color: #625017; background: #fff8dc; font-size: 0.82rem; line-height: 1.45; }
+      .field { display: grid; gap: 7px; margin: 14px 0; }
+      .field label { color: #30483a; font-size: 0.83rem; font-weight: 750; }
+      .field input, .field select, .field textarea { width: 100%; min-height: 46px; border: 1px solid #d7e1d8; border-radius: 12px; padding: 11px 13px; color: #1b3325; background: #fff; }
+      .field textarea { min-height: 112px; resize: vertical; }
+      .field input::placeholder, .field textarea::placeholder { color: #9aa79c; }
+      .auth-bottom { margin: 18px 0 0 !important; text-align: center; font-size: 0.88rem; }
+      .text-button { border: 0; padding: 0; color: #17663a; background: none; font-weight: 750; }
+      .app-heading { padding: 28px 0 14px; }
+      .app-heading h1 { margin: 8px 0 6px; color: var(--green-dark); font-size: clamp(1.8rem, 4vw, 2.5rem); letter-spacing: -0.05em; }
+      .app-heading p { margin: 0; color: var(--muted); }
+      .quick-actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 18px 0 26px; }
+      .stats-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 13px; }
+      .css-view-g5y9jx { box-sizing: border-box; }
+      .r-borderRadius-1ylenci { border-radius: 14px; }
+      .r-boxShadow-63gt66 { box-shadow: 0 10px 24px rgb(43 51 34 / 14%); }
+      .r-padding-nsbfu8 { padding: 20px; }
+      .r-transitionProperty-1i6wzkk { transition: transform 160ms ease, box-shadow 160ms ease; }
+      .r-userSelect-lrvibr { user-select: none; }
+      .r-cursor-1loqt21 { cursor: default; }
+      .r-touchAction-1otgn73 { touch-action: manipulation; }
+      .r-borderRadius-1867qdf { border-radius: 18px; }
+      .r-boxShadow-3xb6qy { box-shadow: 0 12px 26px rgb(91 74 14 / 16%); }
+      .r-minHeight-y5f2so { min-height: 112px; }
+      .r-overflow-1udh08x { overflow: hidden; }
+      .r-padding-1oqcu8e { padding: 18px; }
+      .r-width-vqgaj3 { width: 100%; }
+      [class~="bg-[#d9ac23]"] { background: #d9ac23; }
+      [class~="bg-[#ebbf00]"] { background: #ebbf00; }
+      .stat-card { min-height: 122px; color: #372c08; }
+      .stat-label { font-size: 0.78rem; font-weight: 750; opacity: 0.8; }
+      .stat-value { margin-top: 12px; font-size: 1.8rem; font-weight: 850; letter-spacing: -0.05em; }
+      .stat-note { margin-top: 4px; font-size: 0.72rem; opacity: 0.72; }
+      .content-grid { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(260px, 0.7fr); gap: 16px; margin: 20px 0 36px; }
+      .surface { border: 1px solid var(--line); border-radius: 20px; padding: 20px; background: white; box-shadow: 0 7px 22px rgb(22 48 31 / 4%); }
+      .surface h2 { margin: 0 0 15px; color: var(--green-dark); font-size: 1.05rem; }
+      .tip { border-radius: 15px; padding: 15px; color: #394c3d; background: #eff6ee; font-size: 0.86rem; line-height: 1.55; }
+      .complaint-list { display: grid; gap: 12px; margin-bottom: 36px; }
+      .complaint { border: 1px solid var(--line); border-radius: 18px; padding: 17px; background: white; box-shadow: 0 6px 18px rgb(22 48 31 / 4%); }
+      .complaint-top { display: flex; align-items: start; justify-content: space-between; gap: 15px; }
+      .complaint h3 { margin: 0; color: #203b2b; font-size: 1rem; }
+      .complaint-meta { display: flex; flex-wrap: wrap; gap: 7px 14px; margin-top: 8px; color: var(--muted); font-size: 0.78rem; }
+      .complaint-description { margin: 12px 0 0; color: #53645a; font-size: 0.88rem; line-height: 1.55; }
+      .status { flex: 0 0 auto; border-radius: 99px; padding: 6px 10px; color: #725609; background: #fff4c5; font-size: 0.72rem; font-weight: 800; }
+      .status.in-progress { color: #1e5182; background: #e6f2ff; }
+      .status.resolved { color: #17643a; background: #e2f4e6; }
+      .status.rejected { color: #963f36; background: #fde9e6; }
+      .admin-controls { display: grid; grid-template-columns: minmax(150px, 0.45fr) minmax(180px, 1fr) auto; align-items: end; gap: 10px; margin-top: 15px; padding-top: 14px; border-top: 1px solid #edf1ed; }
+      .admin-controls .field { margin: 0; }
+      .admin-controls textarea { min-height: 43px; resize: vertical; }
+      .empty-state { border: 1px dashed #cbd8cc; border-radius: 17px; padding: 30px 18px; color: var(--muted); background: #fbfcfa; text-align: center; line-height: 1.55; }
+      .toast { position: fixed; z-index: 10; right: 18px; bottom: 20px; max-width: min(420px, calc(100vw - 36px)); border-radius: 13px; padding: 13px 16px; color: white; background: #173e27; box-shadow: var(--shadow); font-size: 0.88rem; }
+      .bottom-nav { display: none; }
+      .footer { padding: 18px 0 26px; border-top: 1px solid var(--line); color: #849087; font-size: 0.75rem; line-height: 1.5; }
+      .footer strong { color: #647568; }
+      .hidden { display: none !important; }
+
+      @media (max-width: 760px) {
+        .welcome { grid-template-columns: 1fr; min-height: auto; padding-top: 26px; }
+        .hero-panel { min-height: 315px; }
+        .feature-grid { grid-template-columns: 1fr; }
+        .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .content-grid { grid-template-columns: 1fr; }
+      }
+      @media (max-width: 560px) {
+        .page { width: min(100% - 22px, 1120px); }
+        .topbar { padding: 12px 0; }
+        .brand-mark { width: 39px; height: 39px; }
+        .brand-name { font-size: 0.87rem; }
+        .brand-sub { font-size: 0.68rem; }
+        .top-actions .button { min-height: 38px; padding: 0 11px; font-size: 0.78rem; }
+        .welcome { gap: 25px; padding-top: 30px; }
+        .welcome h1 { font-size: clamp(2.55rem, 12vw, 3.6rem); }
+        .hero-panel { min-height: 330px; border-radius: 23px; }
+        .panel-stats { gap: 8px; }
+        .panel-stat { padding: 11px; }
+        .panel-stat strong { font-size: 1.2rem; }
+        .panel-stat span { font-size: 0.65rem; }
+        .stats-grid { gap: 9px; }
+        .stat-card { min-height: 108px; padding: 14px; }
+        .stat-value { font-size: 1.5rem; }
+        .admin-controls { grid-template-columns: 1fr; }
+        .complaint-top { flex-direction: column; }
+        .bottom-nav { position: fixed; z-index: 5; right: 0; bottom: 0; left: 0; display: flex; justify-content: space-around; gap: 3px; border-top: 1px solid #dfe8df; padding: 8px 5px max(8px, env(safe-area-inset-bottom)); background: rgb(255 255 255 / 96%); backdrop-filter: blur(12px); }
+        .bottom-nav button { display: grid; justify-items: center; gap: 3px; min-width: 65px; border: 0; padding: 5px 7px; color: #68776d; background: transparent; font-size: 0.65rem; font-weight: 700; }
+        .bottom-nav button.active { color: var(--green); }
+        .bottom-nav .nav-icon { font-size: 1.1rem; line-height: 1; }
+        .footer { padding-bottom: 76px; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <header class="topbar" id="topbar"></header>
+      <main id="app" tabindex="-1"></main>
+      <nav class="bottom-nav" id="bottom-nav" aria-label="Main navigation"></nav>
+      <footer class="footer"><strong>Demo prototype.</strong> Complaints and profiles are saved only in this browser. This page is not connected to a government complaint service.</footer>
+    </div>
+    <div id="toast-root" aria-live="polite"></div>
+
+    <script>
+      const STORAGE_KEY = "swachh-bharat-from-scratch-v1";
+      const ADMIN_EMAIL = "admin@swachh.gov.in";
+      const ADMIN_PASSWORD = "admin123";
+      const seededComplaints = [
+        { id: "SB-2401", userId: "sample-citizen", userName: "Sample Citizen", category: "Garbage", title: "Overflowing community bin", description: "The bin is full and waste is collecting around it.", address: "Park entrance, Sector 7", ward: "Ward 12", status: "Pending", note: "", createdAt: "2026-10-21T09:30:00.000Z" },
+        { id: "SB-2402", userId: "sample-citizen", userName: "Sample Citizen", category: "Streetlight", title: "Streetlight out near bus stop", description: "The light has not been working for several evenings.", address: "Main Road bus stop", ward: "Ward 5", status: "In Progress", note: "Inspection has been scheduled.", createdAt: "2026-10-19T14:10:00.000Z" },
+        { id: "SB-2403", userId: "sample-citizen", userName: "Sample Citizen", category: "Water leakage", title: "Water leaking onto footpath", description: "A pipe joint appears to be leaking continuously.", address: "Market Street", ward: "Ward 3", status: "Resolved", note: "The repair team fixed the pipe joint.", createdAt: "2026-10-16T08:00:00.000Z" }
+      ];
+
+      function readSavedData() {
+        try {
+          return JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+        } catch (_) {
+          return {};
+        }
+      }
+
+      const saved = readSavedData();
+      const state = {
+        profiles: Array.isArray(saved.profiles) ? saved.profiles : [],
+        complaints: Array.isArray(saved.complaints) ? saved.complaints : seededComplaints,
+        session: saved.session || null,
+        screen: saved.session?.role === "admin" ? "admin" : saved.session ? "home" : "welcome",
+        adminMode: false
+      };
+      const app = document.getElementById("app");
+      const topbar = document.getElementById("topbar");
+      const bottomNav = document.getElementById("bottom-nav");
+
+      function persist() {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify({ profiles: state.profiles, complaints: state.complaints, session: state.session }));
+        } catch (_) {
+          toast("Browser storage is unavailable; changes will last only until this page closes.");
+        }
+      }
+
+      function escapeHtml(value) {
+        return String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" })[char]);
+      }
+
+      function toast(message) {
+        const root = document.getElementById("toast-root");
+        root.innerHTML = `<div class="toast" role="status">${escapeHtml(message)}</div>`;
+        window.clearTimeout(toast.timer);
+        toast.timer = window.setTimeout(() => { root.innerHTML = ""; }, 3200);
+      }
+
+      function statusClass(status) {
+        if (status === "In Progress") return "in-progress";
+        if (status === "Resolved") return "resolved";
+        if (status === "Rejected") return "rejected";
+        return "";
+      }
+
+      function formatDate(date) {
+        try { return new Intl.DateTimeFormat("en-IN", { day: "numeric", month: "short", year: "numeric" }).format(new Date(date)); }
+        catch (_) { return "Recently"; }
+      }
+
+      function currentComplaints() {
+        if (state.session?.role === "admin") return state.complaints;
+        return state.complaints.filter((item) => item.userId === state.session?.email);
+      }
+
+      function statCard(label, value, note, first = false) {
+        const shared = "css-view-g5y9jx r-transitionProperty-1i6wzkk r-userSelect-lrvibr r-cursor-1loqt21 r-touchAction-1otgn73 r-borderRadius-1867qdf r-boxShadow-3xb6qy r-minHeight-y5f2so r-overflow-1udh08x r-padding-1oqcu8e r-width-vqgaj3";
+        const classes = first
+          ? "css-view-g5y9jx r-borderRadius-1ylenci r-boxShadow-63gt66 r-padding-nsbfu8 bg-[#d9ac23] stat-card"
+          : `${shared} bg-[#ebbf00] stat-card`;
+        return `<div class="${classes}"><div class="stat-label">${escapeHtml(label)}</div><div class="stat-value">${escapeHtml(value)}</div><div class="stat-note">${escapeHtml(note)}</div></div>`;
+      }
+
+      function complaintMarkup(item, admin = false) {
+        const safeId = escapeHtml(item.id);
+        const controls = admin ? `
+          <div class="admin-controls">
+            <div class="field"><label for="status-${safeId}">Status</label><select id="status-${safeId}" data-status-for="${safeId}">
+              ${["Pending", "In Progress", "Resolved", "Rejected"].map((status) => `<option${item.status === status ? " selected" : ""}>${status}</option>`).join("")}
+            </select></div>
+            <div class="field"><label for="note-${safeId}">Admin response</label><textarea id="note-${safeId}" data-note-for="${safeId}" placeholder="Add an update for the citizen">${escapeHtml(item.note)}</textarea></div>
+            <button class="button small" data-action="save-update" data-id="${safeId}" type="button">Save update</button>
+          </div>` : item.note ? `<div class="tip" style="margin-top:12px"><strong>Latest update:</strong> ${escapeHtml(item.note)}</div>` : "";
+        const person = admin ? `<span>Reported by ${escapeHtml(item.userName)}</span>` : "";
+        return `<article class="complaint">
+          <div class="complaint-top"><div><h3>${escapeHtml(item.title)}</h3><div class="complaint-meta"><span>${escapeHtml(item.category)}</span><span>${escapeHtml(item.address)}</span><span>${escapeHtml(item.ward)}</span><span>${person}</span><span>${formatDate(item.createdAt)}</span><span>ID ${safeId}</span></div></div><span class="status ${statusClass(item.status)}">${escapeHtml(item.status)}</span></div>
+          <p class="complaint-description">${escapeHtml(item.description)}</p>${controls}
+        </article>`;
+      }
+
+      function renderHeader() {
+        const session = state.session;
+        topbar.innerHTML = `
+          <a class="brand" href="#" data-action="home" aria-label="Swachh Bharat home">
+            <span class="brand-mark">SB</span><span><span class="brand-name">Swachh Bharat</span><span class="brand-sub">Complaint System</span></span>
+          </a>
+          <div class="top-actions">
+            ${session ? `<span class="muted" style="font-size:.82rem">${escapeHtml(session.name || "Admin")}</span><button class="button secondary small" data-action="logout" type="button">Sign out</button>` : `<button class="button ghost small" data-action="admin-login" type="button">Admin portal</button><button class="button small" data-action="login" type="button">Sign in</button>`}
+          </div>`;
+      }
+
+      function renderBottomNav() {
+        if (!state.session) { bottomNav.innerHTML = ""; return; }
+        const items = state.session.role === "admin"
+          ? [["admin", "▦", "Dashboard"], ["admin-complaints", "☷", "Complaints"], ["profile", "◉", "Profile"]]
+          : [["home", "⌂", "Home"], ["report", "+", "Report"], ["complaints", "☷", "My reports"], ["profile", "◉", "Profile"]];
+        bottomNav.innerHTML = items.map(([screen, icon, label]) => `<button type="button" data-screen="${screen}" class="${state.screen === screen ? "active" : ""}"><span class="nav-icon">${icon}</span><span>${label}</span></button>`).join("");
+      }
+
+      function welcomeView() {
+        return `<section class="welcome">
+          <div>
+            <span class="eyebrow">A cleaner neighbourhood starts here</span>
+            <h1>See an issue?<br /><span>Report it.</span></h1>
+            <p class="lead">Share civic sanitation and public-area concerns with your local team, then follow each update in one place.</p>
+            <div class="welcome-actions"><button class="button" data-action="register" type="button">Create citizen account <span aria-hidden="true">→</span></button><button class="button secondary" data-action="login" type="button">Sign in</button></div>
+            <div class="trustline"><span class="trust-icon">✓</span> Simple reporting · Clear status updates · Local demo</div>
+          </div>
+          <aside class="hero-panel">
+            <div class="panel-top"><div class="initiative"><span class="initiative-mark">SB</span> Citizen complaint desk</div><span class="live-pill">DEMO APP</span></div>
+            <h2>Your report can help make public spaces cleaner.</h2>
+            <p>Describe the issue, add its location, and keep an eye on the response from your dashboard.</p>
+            <div class="panel-stats"><div class="panel-stat"><strong>01</strong><span>Submit a report</span></div><div class="panel-stat"><strong>02</strong><span>Track progress</span></div><div class="panel-stat"><strong>03</strong><span>See updates</span></div></div>
+          </aside>
+        </section>
+        <section aria-labelledby="features-title">
+          <div class="section-heading"><div><h2 id="features-title">A simple way to raise local issues</h2><p>Everything needed to submit and follow a civic complaint.</p></div></div>
+          <div class="feature-grid">
+            <article class="feature"><span class="feature-icon">＋</span><div><h3>Report clearly</h3><p>Choose a category and include the location, ward and issue details.</p></div></article>
+            <article class="feature"><span class="feature-icon">◷</span><div><h3>Follow status</h3><p>Check whether a report is pending, being handled or resolved.</p></div></article>
+            <article class="feature"><span class="feature-icon">↗</span><div><h3>Receive updates</h3><p>Read the response attached to a complaint as it moves forward.</p></div></article>
+          </div>
+        </section>`;
+      }
+
+      function authView() {
+        const isRegister = state.screen === "register";
+        const admin = state.adminMode;
+        if (isRegister) {
+          return `<section class="auth-wrap"><div class="auth-card"><span class="eyebrow">Citizen access</span><h1>Create your profile</h1><p>Use a local demo profile to submit reports and track them in this browser.</p>
+            <div class="notice"><span>ⓘ</span><span>This prototype saves profile details locally. It does not create an official government account.</span></div>
+            <form data-form="register">
+              <div class="field"><label for="full-name">Full name</label><input id="full-name" name="name" autocomplete="name" placeholder="Your name" required maxlength="80" /></div>
+              <div class="field"><label for="phone">Phone number</label><input id="phone" name="phone" autocomplete="tel" inputmode="tel" placeholder="10-digit phone number" required maxlength="20" /></div>
+              <div class="field"><label for="email">Email address</label><input id="email" name="email" autocomplete="email" type="email" placeholder="you@example.com" required maxlength="120" /></div>
+              <button class="button full" type="submit">Create profile</button>
+            </form>
+            <p class="auth-bottom">Already registered? <button class="text-button" data-action="login" type="button">Sign in</button></p>
+          </div></section>`;
+        }
+        return `<section class="auth-wrap"><div class="auth-card"><span class="eyebrow">${admin ? "Administrator access" : "Welcome back"}</span><h1>${admin ? "Admin portal" : "Sign in"}</h1><p>${admin ? "Use the demonstration administrator account to review reports." : "Sign in to see your local profile and submitted reports."}</p>
+          ${admin ? `<div class="notice"><span>ⓘ</span><span>Demo credentials: <strong>admin@swachh.gov.in</strong> / <strong>admin123</strong></span></div>` : `<div class="notice"><span>ⓘ</span><span>Citizen demo sign-in uses the email you registered. No password is stored in this prototype.</span></div>`}
+          <form data-form="login" data-admin="${admin}">
+            <div class="field"><label for="login-email">Email address</label><input id="login-email" name="email" autocomplete="email" type="email" placeholder="you@example.com" required /></div>
+            ${admin ? `<div class="field"><label for="login-password">Password</label><input id="login-password" name="password" autocomplete="current-password" type="password" placeholder="Admin password" required /></div>` : ""}
+            <button class="button full" type="submit">Continue</button>
+          </form>
+          ${admin ? `<p class="auth-bottom"><button class="text-button" data-action="login" type="button">Citizen sign-in</button></p>` : `<p class="auth-bottom">New here? <button class="text-button" data-action="register" type="button">Create a profile</button></p>`}
+        </div></section>`;
+      }
+
+      function homeView() {
+        const name = escapeHtml(state.session?.name || "Citizen");
+        const own = currentComplaints();
+        const pending = own.filter((item) => item.status === "Pending").length;
+        const active = own.filter((item) => item.status === "In Progress").length;
+        const resolved = own.filter((item) => item.status === "Resolved").length;
+        const latest = [...own].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 3);
+        return `<section class="app-heading"><span class="eyebrow">Citizen dashboard</span><h1>Namaste, ${name}</h1><p>Your reports and their latest updates, all in one place.</p></section>
+          <div class="quick-actions"><button class="button" data-screen="report" type="button">＋ Report an issue</button><button class="button secondary" data-screen="complaints" type="button">View my reports</button></div>
+          <section class="stats-grid" aria-label="Complaint totals">${statCard("My reports", own.length, "All time", true)}${statCard("Pending", pending, "Awaiting review")}${statCard("In progress", active, "Being addressed")}${statCard("Resolved", resolved, "Completed")}</section>
+          <section class="content-grid"><div class="surface"><h2>Recent reports</h2>${latest.length ? `<div class="complaint-list">${latest.map((item) => complaintMarkup(item)).join("")}</div>` : `<div class="empty-state">You haven’t submitted a report yet.<br /><button class="text-button" data-screen="report" type="button">Start your first report →</button></div>`}</div><aside class="surface"><h2>What can you report?</h2><div class="tip">Garbage collection, potholes, water leakage, streetlights, drainage, transformers, dead animals and other public-area issues.</div><div class="tip" style="margin-top:10px">Add a clear location and ward so the right local team can identify the issue.</div></aside></section>`;
+      }
+
+      function reportView() {
+        return `<section class="app-heading"><span class="eyebrow">New complaint</span><h1>Report an issue</h1><p>Describe the issue and where it is happening.</p></section>
+          <section class="auth-card" style="width:100%;margin:10px 0 36px">
+            <form data-form="report">
+              <div class="field"><label for="category">Issue category</label><select id="category" name="category" required><option value="">Choose a category</option>${["Garbage", "Pothole", "Water leakage", "Streetlight", "Drainage", "Transformer", "Dead animals", "Other"].map((c) => `<option>${c}</option>`).join("")}</select></div>
+              <div class="field"><label for="title">Complaint title</label><input id="title" name="title" placeholder="Briefly name the issue" required maxlength="100" /></div>
+              <div class="field"><label for="description">Description</label><textarea id="description" name="description" placeholder="What is happening, and how long has it been there?" required maxlength="1200"></textarea></div>
+              <div class="content-grid" style="margin:0;grid-template-columns:1fr 1fr;gap:12px"><div class="field"><label for="address">Location or address</label><input id="address" name="address" placeholder="Street, landmark or area" required maxlength="160" /></div><div class="field"><label for="ward">Ward or locality</label><input id="ward" name="ward" placeholder="Ward / area name" required maxlength="80" /></div></div>
+              <div class="notice"><span>ⓘ</span><span>Only share information needed to locate the issue. This prototype stores the report in this browser.</span></div>
+              <div class="quick-actions"><button class="button" type="submit">Submit report</button><button class="button secondary" data-screen="home" type="button">Cancel</button></div>
+            </form>
+          </section>`;
+      }
+
+      function complaintsView(admin = false) {
+        const items = [...(admin ? state.complaints : currentComplaints())].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        const counts = ["Pending", "In Progress", "Resolved", "Rejected"].map((status) => `${status}: ${items.filter((item) => item.status === status).length}`).join(" · ");
+        return `<section class="app-heading"><span class="eyebrow">${admin ? "Administration" : "Complaint tracking"}</span><h1>${admin ? "All complaints" : "My reports"}</h1><p>${admin ? `${items.length} reports from all demo profiles.` : "Track the progress and read updates on your submitted issues."}</p></section>
+          ${admin ? `<div class="tip" style="margin-bottom:16px">${counts}</div>` : ""}
+          <section class="complaint-list">${items.length ? items.map((item) => complaintMarkup(item, admin)).join("") : `<div class="empty-state">No reports yet. When you submit an issue, it will appear here with its status and updates.</div>`}</section>`;
+      }
+
+      function profileView() {
+        const s = state.session;
+        return `<section class="app-heading"><span class="eyebrow">Your account</span><h1>Profile</h1><p>Details for this browser’s local demo profile.</p></section>
+          <section class="surface" style="max-width:620px;margin:10px 0 36px"><div class="field"><label>Name</label><div class="tip">${escapeHtml(s?.name || "Admin Officer")}</div></div><div class="field"><label>Email</label><div class="tip">${escapeHtml(s?.email || ADMIN_EMAIL)}</div></div><div class="field"><label>Account type</label><div class="tip">${s?.role === "admin" ? "Demo administrator" : "Citizen demo profile"}</div></div><button class="button secondary" data-action="logout" type="button">Sign out</button></section>`;
+      }
+
+      function adminView() {
+        const items = state.complaints;
+        const pending = items.filter((item) => item.status === "Pending").length;
+        const active = items.filter((item) => item.status === "In Progress").length;
+        const resolved = items.filter((item) => item.status === "Resolved").length;
+        return `<section class="app-heading"><span class="eyebrow">Administrator dashboard</span><h1>Good day, Admin</h1><p>Review reports and add status updates for citizens.</p></section>
+          <div class="quick-actions"><button class="button" data-screen="admin-complaints" type="button">Review complaints</button></div>
+          <section class="stats-grid" aria-label="All complaint totals">${statCard("All reports", items.length, "Across demo profiles", true)}${statCard("Pending", pending, "Need review")}${statCard("In progress", active, "Being addressed")}${statCard("Resolved", resolved, "Completed")}</section>
+          <section class="content-grid"><div class="surface"><h2>Needs attention</h2>${items.filter((item) => item.status === "Pending").length ? `<div class="complaint-list">${items.filter((item) => item.status === "Pending").slice(0, 3).map((item) => complaintMarkup(item, true)).join("")}</div><button class="button secondary small" data-screen="admin-complaints" type="button">Open all complaints</button>` : `<div class="empty-state">No pending complaints.</div>`}</div><aside class="surface"><h2>Admin workflow</h2><div class="tip">Open a complaint, set its status, and add a short response. The citizen will see the update in their report details.</div></aside></section>`;
+      }
+
+      function render() {
+        renderHeader();
+        renderBottomNav();
+        if (state.screen === "welcome") app.innerHTML = welcomeView();
+        else if (state.screen === "register" || state.screen === "login") app.innerHTML = authView();
+        else if (state.screen === "home") app.innerHTML = homeView();
+        else if (state.screen === "report") app.innerHTML = reportView();
+        else if (state.screen === "complaints") app.innerHTML = complaintsView(false);
+        else if (state.screen === "admin-complaints") app.innerHTML = complaintsView(true);
+        else if (state.screen === "profile") app.innerHTML = profileView();
+        else if (state.screen === "admin") app.innerHTML = adminView();
+        else app.innerHTML = welcomeView();
+      }
+
+      function goTo(screen) {
+        if ((screen === "report" || screen === "complaints" || screen === "home") && !state.session) screen = "login";
+        if ((screen === "admin" || screen === "admin-complaints") && state.session?.role !== "admin") screen = "login";
+        state.screen = screen;
+        if (screen === "login" && !state.adminMode) state.adminMode = false;
+        render();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      document.addEventListener("click", (event) => {
+        const screenButton = event.target.closest("[data-screen]");
+        if (screenButton) { event.preventDefault(); goTo(screenButton.dataset.screen); return; }
+        const button = event.target.closest("[data-action]");
+        if (!button) return;
+        event.preventDefault();
+        const action = button.dataset.action;
+        if (action === "home") goTo(state.session?.role === "admin" ? "admin" : state.session ? "home" : "welcome");
+        if (action === "login") { state.adminMode = false; goTo("login"); }
+        if (action === "admin-login") { state.adminMode = true; goTo("login"); }
+        if (action === "register") { state.adminMode = false; goTo("register"); }
+        if (action === "logout") { state.session = null; state.adminMode = false; persist(); goTo("welcome"); toast("You have signed out."); }
+        if (action === "save-update") {
+          const item = state.complaints.find((entry) => entry.id === button.dataset.id);
+          if (!item) return;
+          item.status = document.querySelector(`[data-status-for="${CSS.escape(item.id)}"]`).value;
+          item.note = document.querySelector(`[data-note-for="${CSS.escape(item.id)}"]`).value.trim();
+          persist(); render(); toast("Complaint update saved.");
+        }
+      });
+
+      document.addEventListener("submit", (event) => {
+        const form = event.target.closest("form[data-form]");
+        if (!form) return;
+        event.preventDefault();
+        const fields = new FormData(form);
+        const formType = form.dataset.form;
+        if (formType === "register") {
+          const name = String(fields.get("name") || "").trim();
+          const phone = String(fields.get("phone") || "").trim();
+          const email = String(fields.get("email") || "").trim().toLowerCase();
+          if (state.profiles.some((profile) => profile.email === email)) { toast("A local profile already exists for this email. Sign in instead."); return; }
+          const profile = { id: `citizen-${Date.now()}`, name, phone, email, role: "citizen" };
+          state.profiles.push(profile);
+          state.session = profile;
+          state.screen = "home";
+          persist(); render(); toast("Your local demo profile is ready.");
+        }
+        if (formType === "login") {
+          const email = String(fields.get("email") || "").trim().toLowerCase();
+          const admin = form.dataset.admin === "true";
+          if (admin) {
+            const password = String(fields.get("password") || "");
+            if (email !== ADMIN_EMAIL || password !== ADMIN_PASSWORD) { toast("The demo admin email or password is incorrect."); return; }
+            state.session = { id: "demo-admin", name: "Admin Officer", email: ADMIN_EMAIL, role: "admin" };
+            state.screen = "admin";
+          } else {
+            const profile = state.profiles.find((entry) => entry.email === email);
+            if (!profile) { toast("No local profile found for that email. Create a profile first."); return; }
+            state.session = profile;
+            state.screen = "home";
+          }
+          state.adminMode = false;
+          persist(); render(); toast("Signed in to the local demo.");
+        }
+        if (formType === "report") {
+          if (!state.session || state.session.role !== "citizen") { state.adminMode = false; goTo("login"); toast("Sign in as a citizen before submitting a report."); return; }
+          const entry = {
+            id: `SB-${String(Date.now()).slice(-6)}`,
+            userId: state.session.email,
+            userName: state.session.name,
+            category: String(fields.get("category") || "Other"),
+            title: String(fields.get("title") || "").trim(),
+            description: String(fields.get("description") || "").trim(),
+            address: String(fields.get("address") || "").trim(),
+            ward: String(fields.get("ward") || "").trim(),
+            status: "Pending",
+            note: "",
+            createdAt: new Date().toISOString()
+          };
+          state.complaints.unshift(entry);
+          state.screen = "complaints";
+          persist(); render(); toast("Your report was saved in this browser.");
+        }
+      });
+
+      render();
+    </script>
+  </body>
+</html>
